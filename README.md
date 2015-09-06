@@ -3,8 +3,9 @@ FPMC
 
 ###Produce
 hive -> DataFrame -> RDD[Features] -> *Hbase*
+
 example:
-'''
+```
   // Prepare hql, function which map dataFrame to Features and HbaseStorage instance.
   val params = SparkSql2HbaseParams("select sku,brand from item_table",
       _ => new Features(new FeatureID(_.getInt(0)).addFeature(new Feature("b", _.getInt(1))),
@@ -17,12 +18,13 @@ example:
   val featureRdd = workflow.data2feature(new HiveContext(sc))
   // Storage Features to Hbase
   workflow.feature2storage(featureRdd)
-'''
+```
 
 ###Consume
 hiveTable -> DataFrame -> RDD[Action] -> *RDD[Example]* <- Hbase
+
 example:
-'''  
+``` 
   // Prepare hql, function which map dataFrame to Features and HbaseStorage instance.
   val params = HbaseReaderForSparkSqlParma("select label,sku from log",
     _ => new Action.setLabel(_.getInt(0)).addFsid(new FeaturesID(_.getInt(1)))
@@ -32,4 +34,4 @@ example:
   val reader = new HbaseReaderForSparkSql(params)
   // Combine the label and Features to generate examples
   reader.makeExamples
-'''
+```
