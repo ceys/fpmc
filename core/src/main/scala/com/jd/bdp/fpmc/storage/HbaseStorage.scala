@@ -13,15 +13,17 @@ import scala.collection.JavaConversions._
  * Created by zhengchen on 2015/8/27.
  */
 
-class HbaseStorage(hbaseZK: String, parent: String, tableName: String) extends Serializable {
+class HbaseStorage(hbaseZK: String, parent: String,
+                   tableName: String, family: Array[Byte]) extends Serializable {
 
   def create: HbaseTable = {
-    new HbaseTable(hbaseZK, parent, tableName)
+    new HbaseTable(hbaseZK, parent, tableName, family: Array[Byte])
   }
 
 }
 
-class HbaseTable(hbaseZK: String, parent: String, tableName: String) {
+class HbaseTable(hbaseZK: String, parent: String,
+                 tableName: String, family: Array[Byte]) {
 
   private val hbaseConf = HBaseConfiguration.create()
   hbaseConf.set("hbase.zookeeper.quorum", hbaseZK)
@@ -30,14 +32,14 @@ class HbaseTable(hbaseZK: String, parent: String, tableName: String) {
   private val table = new HTable(hbaseConf, tableName)
 
 
-  def pushFeatures(fsid: FeaturesID, family: Array[Byte], features: Features) {
+  def pushFeatures(fsid: FeaturesID, features: Features) {
     val p = new Put(fsid.toHbaseKey)
     features.foreach(f => p.add(family, Bytes.toBytes(f.name), Bytes.toBytes(f.value)))
     table.put(p)
   }
 
 
-  def pullFeatures(fsid: FeaturesID, family: Array[Byte]): Features = {
+  def pullFeatures(fsid: FeaturesID): Features = {
     val get: Get = new Get(fsid.toHbaseKey).addFamily(family)
     val r = table.get(get)
     val result = new Features(fsid)
