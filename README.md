@@ -25,7 +25,7 @@ hiveTable -> DataFrame -> RDD[Action] -> **RDD[Example]** <- Hbase
 
 example:
 ```scala 
-  // Prepare hql, function which map dataFrame to Features and HbaseStorage instance.
+  // Prepare hql, function which map dataFrame to Action and HbaseStorage instance.
   val params = HbaseReaderForSparkSqlParma("select label,sku from log",
     _ => new Action.setLabel(_.getInt(0)).addFsid(new FeaturesID(_.getInt(1)))
     new HbaseStorage("ZK-Host","parent","HbaseTable","Family"))
@@ -35,3 +35,10 @@ example:
   // Combine the label and Features to generate examples
   reader.makeExamples
 ```
+
+###Entity
+Features
+
+Action
+
+Example
