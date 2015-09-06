@@ -2,10 +2,10 @@ FPMC
 ====
 
 ###Produce
-hive -> DataFrame -> RDD[Features] -> *Hbase*
+hive -> DataFrame -> RDD[Features] -> **Hbase**
 
 example:
-```
+```scala
   // Prepare hql, function which map dataFrame to Features and HbaseStorage instance.
   val params = SparkSql2HbaseParams("select sku,brand from item_table",
       _ => new Features(new FeatureID(_.getInt(0)).addFeature(new Feature("b", _.getInt(1))),
@@ -21,10 +21,10 @@ example:
 ```
 
 ###Consume
-hiveTable -> DataFrame -> RDD[Action] -> *RDD[Example]* <- Hbase
+hiveTable -> DataFrame -> RDD[Action] -> **RDD[Example]** <- Hbase
 
 example:
-``` 
+```scala 
   // Prepare hql, function which map dataFrame to Features and HbaseStorage instance.
   val params = HbaseReaderForSparkSqlParma("select label,sku from log",
     _ => new Action.setLabel(_.getInt(0)).addFsid(new FeaturesID(_.getInt(1)))
