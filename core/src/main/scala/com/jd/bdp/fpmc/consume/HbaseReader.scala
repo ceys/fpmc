@@ -5,6 +5,8 @@ import com.jd.bdp.fpmc.entity.result.{FeaturesID, Features}
 import com.jd.bdp.fpmc.storage.HbaseStorage
 import main.scala.com.jd.bdp.fpmc.entity.result.Example
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.hive.HiveContext
 
 import scala.collection.mutable
 
@@ -12,7 +14,7 @@ import scala.collection.mutable
  * Created by zhengchen on 2015/8/31.
  */
 
-case class HbaseReaderParams(sql: String, row2Action: Row => RDD[Action],
+case class HbaseReaderParams(sql: String, row2Action: Row => Action,
                              hbaseStorage: HbaseStorage) extends Serializable
 
 class HbaseReader(hrp: HbaseReaderParams) {
@@ -28,7 +30,7 @@ class HbaseReader(hrp: HbaseReaderParams) {
           if (cache.contains(fsid.toHbaseKey)){
             cache.get(fsid.toHbaseKey).get
           } else {
-            features = hbaseTable.pullFeatures(fsid, hrp.hbaseTableFamily)
+            features = hbaseTable.pullFeatures(fsid)
             cache.put(fsid.toHbaseKey, features)
           }
           features

@@ -7,6 +7,6 @@ abstract class BaseWorkFlow[SC, FD, ST] extends Serializable {
 
   def data2feature(sc: SC): FD
 
-  def feature2storage(fd: FD, st: ST)
+  def feature2storage(fd: FD)
 
 }

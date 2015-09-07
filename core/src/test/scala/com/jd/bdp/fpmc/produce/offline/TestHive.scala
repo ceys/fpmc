@@ -18,6 +18,7 @@ import scala.collection.mutable
  */
 object TestHive {
 
+  /*
   def main(args: Array[String]) {
     val conf = new SparkConf().setAppName("Simple Application")
     val sc = new SparkContext(conf)
@@ -116,5 +117,6 @@ object TestHive {
     sc.stop()
 
   }
+  */
 
 }

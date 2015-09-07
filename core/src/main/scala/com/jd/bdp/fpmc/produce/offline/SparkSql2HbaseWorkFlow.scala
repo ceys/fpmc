@@ -11,8 +11,7 @@ import org.apache.spark.sql.{SQLContext, Row}
 
 case class SparkSql2HbaseParams(sparkSql: String,
                                 row2features: Row => Features,
-                                st: HbaseStorage,
-                                hbaseTableFamily: Array[Byte]) extends Serializable
+                                st: HbaseStorage) extends Serializable
 
 
 class SparkSql2HbaseWorkFlow(val ss2hp: SparkSql2HbaseParams) extends BaseWorkFlow[SQLContext, RDD[Features], HbaseStorage] {
@@ -27,7 +26,7 @@ class SparkSql2HbaseWorkFlow(val ss2hp: SparkSql2HbaseParams) extends BaseWorkFl
     fd.mapPartitions{ partitionOfRecords => {
       val hbaseTalbe = ss2hp.st.create
       partitionOfRecords.foreach { f =>
-        hbaseTalbe.pushFeatures(f.getId, ss2hp.hbaseTableFamily, f)
+        hbaseTalbe.pushFeatures(f.getId, f)
       }
       Iterator.single()
     }
