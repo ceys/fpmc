@@ -44,8 +44,11 @@ class HbaseTable(hbaseZK: String, parent: String,
     val r = table.get(get)
     val result = new Features(fsid)
     if (r != null) {
-      for ((k,v) <- r.getNoVersionMap.get(family)) {
-        result.addFeature(new Feature(Bytes.toString(k), Bytes.toString(v)))
+      val featureMap = r.getNoVersionMap
+      if (featureMap != null) {
+        for ((k,v) <- featureMap.get(family)) {
+          result.addFeature(new Feature(Bytes.toString(k), Bytes.toString(v)))
+        }
       }
     }
     result

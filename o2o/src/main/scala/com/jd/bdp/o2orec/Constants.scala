@@ -6,8 +6,22 @@ package com.jd.bdp.o2orec
 object Constants {
 
   // ================== vw namespace ================
-  val  VW_NAMESPACE_3_DAYS_BUY_BRAND = "a"
-  val  VW_NAMESPACE_7_DAYS_BUY_BRAND = "b"
+  val VW_NAME_ITEM_CATEGORYID = "a"
+  val VW_NAME_ITEM_BRANDID = "b"
+  val VW_NAME_ITEM_SKUPRICE = "c"
+  val VW_NAME_ITEM_SKUMARKETPRICE = "d"
+  val VW_NAME_ITEM_LENGTH = "e"
+  val VW_NAME_ITEM_WIDE = "f"
+  val VW_NAME_ITEM_HIGH = "g"
+  val VW_NAME_ITEM_WEIGHT = "h"
+  val VW_NAME_ITEM_SHOPCATEGORIES = "i"
+  val VW_NAME_ITEM_ORGCODE = "j"
+
+  val VW_NAME_3_DAYS_BUY_BRAND = "A"
+  val VW_NAME_7_DAYS_BUY_BRAND = "B"
+
+  // ================= cross features attr id ===========
+  val CROSS_FEATURES_BRAND_ID: Char = 1
 
   // ================= hbase config =====================
   val HBASE_ZOOKEEPER_QUORUM = "BJHC-HBase-Magpie-17896.jd.local:2181," +
@@ -21,8 +35,5 @@ object Constants {
 
   // ================= hbase table family ===============
   val HBASE_OFFLINE_FEATURE_FAMILY = "d"
-
-  // ================= cross features attr id ===========
-  val CROSS_FEATURES_BRAND_ID: Char = 1
 
 }

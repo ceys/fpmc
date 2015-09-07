@@ -35,10 +35,10 @@ object ItemBrandCrossWorkFlow {
      """
 
   def user_brand_row_2_features(row: Row): Features = {
-    val id = new CrossFeaturesId(row.getString(0), Constants.CROSS_FEATURES_BRAND_ID, row.getInt(1), YESTERDAY_TIMESTAMP)
+    val id = new CrossFeaturesId(row.getString(0), Constants.CROSS_FEATURES_BRAND_ID, row.getInt(1).toLong, YESTERDAY_TIMESTAMP)
     val result = new Features(id)
-    result.addFeature(new Feature(Constants.VW_NAMESPACE_3_DAYS_BUY_BRAND, row.getInt(2).toString))
-    result.addFeature(new Feature(Constants.VW_NAMESPACE_7_DAYS_BUY_BRAND, row.getInt(3).toString))
+    result.addFeature(new Feature(Constants.VW_NAME_3_DAYS_BUY_BRAND, row.getInt(2).toString))
+    result.addFeature(new Feature(Constants.VW_NAME_7_DAYS_BUY_BRAND, row.getInt(3).toString))
     result
   }
 

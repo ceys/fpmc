@@ -3,6 +3,7 @@ package com.jd.bdp.fpmc.consume
 import com.jd.bdp.fpmc.entity.origin.Action
 import com.jd.bdp.fpmc.entity.result.{FeaturesID, Features}
 import com.jd.bdp.fpmc.storage.HbaseStorage
+import main.scala.com.jd.bdp.fpmc.consume.BaseReader
 import main.scala.com.jd.bdp.fpmc.entity.result.Example
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
@@ -17,9 +18,10 @@ import scala.collection.mutable
 case class HbaseReaderParams(sql: String, row2Action: Row => Action,
                              hbaseStorage: HbaseStorage) extends Serializable
 
-class HbaseReader(hrp: HbaseReaderParams) {
+class HbaseReader(hrp: HbaseReaderParams) extends BaseReader[HiveContext, RDD[Example]] {
 
-  def makeExamples(sqlContext: HiveContext): RDD[Example] = {
+  @transient
+  override def makeExamples(sqlContext: HiveContext): RDD[Example] = {
     sqlContext.sql(hrp.sql).map(hrp.row2Action).mapPartitions{ partitionOfRecords => {
       val hbaseTable = hrp.hbaseStorage.create
       val cache = new mutable.HashMap[Array[Byte], Features]()
