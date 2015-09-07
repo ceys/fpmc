@@ -28,8 +28,9 @@ class Features(fid: FeaturesID) extends Iterable[Feature] with Serializable {
   private val features = new mutable.LinkedList[Feature]
   private var id: FeaturesID = fid
 
-  def addFeature(f: Feature): Unit = {
+  def addFeature(f: Feature): Features = {
     features.+:(f)
+    this
   }
 
   def toVW: String = {

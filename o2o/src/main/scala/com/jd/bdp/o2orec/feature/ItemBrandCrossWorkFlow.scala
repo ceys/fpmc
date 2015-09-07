@@ -43,17 +43,20 @@ object ItemBrandCrossWorkFlow {
   }
 
   def run() {
-    val params = SparkSql2HbaseParams(user_brand_buy_sql, user_brand_row_2_features,
-      Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
-    val workflow = new SparkSql2HbaseWorkFlow(params)
-
     val conf = new SparkConf()
     val sc = new SparkContext(conf)
     val sqlContext = new HiveContext(sc)
-    val featureRdd = workflow.data2feature(sqlContext)
+
     val hbaseStorage = new HbaseStorage( Constants.HBASE_ZOOKEEPER_QUORUM,
-      Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE)
-    workflow.feature2storage(featureRdd, hbaseStorage)
+      Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE
+      , Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
+
+    val params = SparkSql2HbaseParams(user_brand_buy_sql, user_brand_row_2_features,
+      hbaseStorage)
+
+    val workflow = new SparkSql2HbaseWorkFlow(params)
+    val featureRdd = workflow.data2feature(sqlContext)
+    workflow.feature2storage(featureRdd)
 
     sc.stop()
   }

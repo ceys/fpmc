@@ -45,9 +45,9 @@ object HomePageBuy {
     val sqlContext = new HiveContext(sc)
     val actionRDD = sqlContext.sql(clickSql).map(click2Action)
     val hbaseStorage = new HbaseStorage(Constants.HBASE_ZOOKEEPER_QUORUM,
-      Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE)
-    val readerParams = new HbaseReaderParams(Array(), hbaseStorage,
+      Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE,
       Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
+    val readerParams = new HbaseReaderParams(Array(), hbaseStorage)
     val reader = new HbaseReader(readerParams)
     val exampleRDD = reader.combineLabelFeatures(actionRDD)
     exampleRDD.saveAsTextFile("/tmp/zc/fpmc/test2")

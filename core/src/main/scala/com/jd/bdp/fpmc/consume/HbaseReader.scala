@@ -12,13 +12,13 @@ import scala.collection.mutable
  * Created by zhengchen on 2015/8/31.
  */
 
-case class HbaseReaderParams(fName: Array[String], hbaseStorage: HbaseStorage,
-                              hbaseTableFamily: Array[Byte]) extends Serializable
+case class HbaseReaderParams(sql: String, row2Action: Row => RDD[Action],
+                             hbaseStorage: HbaseStorage) extends Serializable
 
 class HbaseReader(hrp: HbaseReaderParams) {
 
-  def combineLabelFeatures(action: RDD[Action]): RDD[Example] = {
-    action.mapPartitions{ partitionOfRecords => {
+  def makeExamples(sqlContext: HiveContext): RDD[Example] = {
+    sqlContext.sql(hrp.sql).map(hrp.row2Action).mapPartitions{ partitionOfRecords => {
       val hbaseTable = hrp.hbaseStorage.create
       val cache = new mutable.HashMap[Array[Byte], Features]()
       partitionOfRecords.map { a =>
