@@ -6,6 +6,10 @@ hive -> DataFrame -> RDD[Features] -> **Hbase**
 
 example:
 ```scala
+  import com.jd.bdp.fpmc.entity.result.{FeaturesId, Feature, Features}
+  import com.jd.bdp.fpmc.produce.offline.{SparkSql2HbaseWorkFlow, SparkSql2HbaseParams}
+  import com.jd.bdp.fpmc.storage.HbaseStorage
+
   // Prepare hql, function which map dataFrame to Features and HbaseStorage instance.
   val params = SparkSql2HbaseParams("select sku,brand from item_table",
       _ => new Features(new FeatureID(_.getInt(0)).addFeature(new Feature("b", _.getInt(1))),
@@ -24,7 +28,12 @@ example:
 hiveTable -> DataFrame -> RDD[Action] -> **RDD[Example]** <- Hbase
 
 example:
-```scala 
+```scala
+  import com.jd.bdp.fpmc.consume.{HbaseReader, HbaseReaderParams}
+  import com.jd.bdp.fpmc.entity.origin.Action
+  import com.jd.bdp.fpmc.entity.result.FeaturesId
+  import com.jd.bdp.fpmc.storage.HbaseStorage
+
   // Prepare hql, function which map dataFrame to Action and HbaseStorage instance.
   val params = HbaseReaderForSparkSqlParma("select label,sku from log",
     _ => new Action.setLabel(_.getInt(0)).addFsid(new FeaturesID(_.getInt(1)))
