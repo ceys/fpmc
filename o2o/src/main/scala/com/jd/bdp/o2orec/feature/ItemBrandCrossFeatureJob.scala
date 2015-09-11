@@ -1,8 +1,9 @@
 package com.jd.bdp.o2orec.feature
 
 import com.github.nscala_time.time.Imports._
+import com.jd.bdp.fpmc.Job
 import com.jd.bdp.fpmc.entity.result.{CrossFeaturesId, Feature, Features, FeaturesID}
-import com.jd.bdp.fpmc.produce.offline.{SparkSql2HbaseParams, SparkSql2HbaseWorkFlow}
+import com.jd.bdp.fpmc.produce.offline.{SparkSql2HbaseParams, SparkSql2Hbase}
 import com.jd.bdp.fpmc.storage.HbaseStorage
 import com.jd.bdp.o2orec.Constants
 import org.apache.hadoop.hbase.util.Bytes
@@ -13,7 +14,7 @@ import org.apache.spark.sql.Row
 /**
  * Created by zhengchen on 2015/9/2.
  */
-object ItemBrandCrossWorkFlow {
+object ItemBrandCrossFeatureJob extends Job[SparkContext] {
 
   val fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
   val YESTERDAY = (DateTime.now - 1.days).toString(fmt)
@@ -42,9 +43,8 @@ object ItemBrandCrossWorkFlow {
     result
   }
 
-  def run() {
-    val conf = new SparkConf()
-    val sc = new SparkContext(conf)
+  def run(sc: SparkContext) {
+
     val sqlContext = new HiveContext(sc)
 
     val hbaseStorage = new HbaseStorage( Constants.HBASE_ZOOKEEPER_QUORUM,
@@ -54,15 +54,17 @@ object ItemBrandCrossWorkFlow {
     val params = SparkSql2HbaseParams(user_brand_buy_sql, user_brand_row_2_features,
       hbaseStorage)
 
-    val workflow = new SparkSql2HbaseWorkFlow(params)
+    val workflow = new SparkSql2Hbase(params)
     val featureRdd = workflow.data2feature(sqlContext)
     workflow.feature2storage(featureRdd)
 
-    sc.stop()
   }
 
   def main(args: Array[String]) {
-    run()
+    val conf = new SparkConf()
+    val sc = new SparkContext(conf)
+    run(sc)
+    sc.stop()
   }
 
 }

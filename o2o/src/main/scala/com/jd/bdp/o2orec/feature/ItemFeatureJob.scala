@@ -1,8 +1,9 @@
 package com.jd.bdp.o2orec.feature
 
 import com.github.nscala_time.time.Imports._
+import com.jd.bdp.fpmc.Job
 import com.jd.bdp.fpmc.entity.result.{ItemFeaturesId, Feature, Features}
-import com.jd.bdp.fpmc.produce.offline.{SparkSql2HbaseWorkFlow, SparkSql2HbaseParams}
+import com.jd.bdp.fpmc.produce.offline.{SparkSql2Hbase, SparkSql2HbaseParams}
 import com.jd.bdp.fpmc.storage.HbaseStorage
 import com.jd.bdp.o2orec.Constants
 import org.apache.hadoop.hbase.util.Bytes
@@ -13,7 +14,7 @@ import org.apache.spark.{SparkContext, SparkConf}
 /**
  * Created by zhengchen on 2015/9/7.
  */
-object ItemWorkFlow {
+object ItemFeatureJob extends Job[SparkContext] {
 
   val fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
   val DATE = (DateTime.now - 1.days).toString(fmt)
@@ -74,7 +75,7 @@ object ItemWorkFlow {
     val params = SparkSql2HbaseParams(item_sql, item_row_2_features,
       hbaseStorage)
 
-    val workflow = new SparkSql2HbaseWorkFlow(params)
+    val workflow = new SparkSql2Hbase(params)
     val featureRdd = workflow.data2feature(sqlContext)
     workflow.feature2storage(featureRdd)
   }

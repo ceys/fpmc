@@ -14,7 +14,7 @@ case class SparkSql2HbaseParams(sparkSql: String,
                                 st: HbaseStorage) extends Serializable
 
 
-class SparkSql2HbaseWorkFlow(val ss2hp: SparkSql2HbaseParams) extends BaseWorkFlow[SQLContext, RDD[Features], HbaseStorage] {
+class SparkSql2Hbase(val ss2hp: SparkSql2HbaseParams) extends BaseWorkFlow[SQLContext, RDD[Features], HbaseStorage] {
 
   @transient
   override def data2feature(sqlContext: SQLContext): RDD[Features] = {
