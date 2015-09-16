@@ -11,6 +11,7 @@
     <modules>
         <module>core</module>
         <module>o2o</module>
+        <module>tools</module>
     </modules>
 
     <properties>

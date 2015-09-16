@@ -5,6 +5,9 @@ package com.jd.bdp.fpmc.util
  */
 object Constants {
 
+  //Hbase Feature Meta Rowkey
+  val HBASE_FEATURE_META_ROWKEY = "hbase_feature_meta_rowkey"
+
   // hbase
   val HBASE_ZOOKEEPER_QUORUM = "BJHC-HBase-Magpie-17896.jd.local:2181," +
     "BJHC-HBase-Magpie-17895.jd.local:2181,BJHC-HBase-Magpie-17894.jd.local:2181," +
@@ -14,9 +17,13 @@ object Constants {
 
   // hbase family
   val HBASE_FEATURE_OFFLINE_FAMILY = "d"
+  val HBASE_TABLE_DEFAULT_FAMILY = "d"
 
   // hbase table
   val HBASE_ITEM_FEATURE_TABLE = "o2o_item_feature"
+
+  // Hbase Meta data table
+  val HBASE_META_DATA_TABLE = "fpmc_meta_data"
 
   // vw namespace
   val VW_NAME_ITEM_CATEGORYID = "a"

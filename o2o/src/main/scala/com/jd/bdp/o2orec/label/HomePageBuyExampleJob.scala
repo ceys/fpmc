@@ -51,14 +51,7 @@ object HomePageBuyExampleJob extends Job[SparkContext] {
     val readerParams = new HbaseReaderParams(clickSql, click2Action, hbaseStorage)
     val reader = new HbaseReader(readerParams)
 
-    reader.makeExamples(sqlContext).map(_.toVW).saveAsTextFile("/tmp/zc/fpmc/test4")
-  }
-
-  def main(args: Array[String]) {
-    val conf = new SparkConf()
-    val sc = new SparkContext(conf)
-    run(sc)
-    sc.stop()
+    reader.makeExamples(sqlContext).map(_.toVW).saveAsTextFile(s"/tmp/zc/fpmc/example/$DATE")
   }
 
 }

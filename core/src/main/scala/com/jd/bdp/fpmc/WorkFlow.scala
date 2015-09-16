@@ -1,11 +1,12 @@
 package com.jd.bdp.fpmc
 
 import org.apache.spark.{SparkContext, SparkConf}
+import org.joda.time.DateTime
 
 /**
  * Created by zhengchen on 2015/9/8.
  */
-class WorkFlow[C](jobClassNames: Array[String]) {
+/*class WorkFlow[C](jobClassNames: Array[String]) {
 
   def start(context: C) = {
     val jobs = jobClassNames.map { className =>
@@ -14,21 +15,10 @@ class WorkFlow[C](jobClassNames: Array[String]) {
     jobs.foreach(_.run(context))
   }
 
-}
+}*/
 
-object CreateFPMCWorkFlow {
-
-  def run(): Unit = {
-    val conf = new SparkConf()
-    val sc = new SparkContext(conf)
-    val jobs = Array("com.jd.bdp.o2orec.feature.ItemBrandCrossFeatureJob")
-
-    sc.stop()
-  }
-
-  def main(args: Array[String]): Unit = {
-
-
-  }
+case class JobContext(date: DateTime) {
 
 }
+
+
