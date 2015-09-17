@@ -38,11 +38,6 @@
             <version>${spark.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.clapper</groupId>
-            <artifactId>grizzled-slf4j_${scala.binary.version}</artifactId>
-            <version>1.0.2</version>
-        </dependency>
     </dependencies>
 
     <build>
