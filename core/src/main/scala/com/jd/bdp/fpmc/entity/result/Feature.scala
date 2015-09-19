@@ -2,9 +2,9 @@ package com.jd.bdp.fpmc.entity.result
 
 import java.nio.ByteBuffer
 
+import org.apache.hadoop.hbase.util.Bytes
 import org.joda.time.DateTime
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -79,14 +79,32 @@ class ItemFeaturesId(sku: Long, time: Int, isOffline: Boolean) extends FeaturesI
 
 }
 
+class UserFeaturesId(user: String, time: Int, isOffline: Boolean) extends FeaturesID {
 
-class CrossFeaturesId(uid: String, attrCate: Char, attrId: Long, time: Int) extends FeaturesID {
+  override def toHbaseKey: Array[Byte] = {
+    val key = ByteBuffer.allocate(4 + 8)
+    if (isOffline) {
+      key.putInt(time - new DateTime(time.toLong * 1000).getSecondOfDay)
+    } else {
+      key.putInt(time)
+    }
+    key.put(Bytes.toBytes(user))
+    key.array()
+  }
+}
+
+
+class CrossFeaturesId(uid: String, attrCate: Int, attrId: Long, time: Int, isOffline: Boolean) extends FeaturesID {
 
   override
   def toHbaseKey: Array[Byte] = {
-    val key = ByteBuffer.allocate(4 + 1 + 8 + uid.size)
-    key.putInt(time)
-    key.putChar(attrCate)
+    val key = ByteBuffer.allocate(4 + 4 + 8 + uid.size)
+    if (isOffline) {
+      key.putInt(time - new DateTime(time.toLong * 1000).getSecondOfDay)
+    } else {
+      key.putInt(time)
+    }
+    key.putInt(attrCate)
     key.putLong(attrId)
     key.put(uid.getBytes)
     key.array()

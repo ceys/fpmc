@@ -68,11 +68,11 @@ class HbaseTable(hbaseZK: String, parent: String,
    * If the namespace is already exist, then throws teh FeatureNameAlreadyUsedException.
    * @param dsp FeatureDescription
    */
-  def pushFeatureMeta(dsp: FeatureDescription): Unit = {
-    if (featureNameIsExist(dsp.vwName)) {
+  def pushFeatureMeta(dsp: FeatureDescription, rowKey: Array[Byte]): Unit = {
+    if (featureNameIsExist(dsp.vwName, rowKey)) {
       throw FeatureNameAlreadyUsedException(dsp.vwName)
     } else {
-      val p = new Put(Bytes.toBytes(Constants.HBASE_FEATURE_META_ROWKEY))
+      val p = new Put(rowKey)
       p.add(family, Bytes.toBytes(dsp.vwName),
         Bytes.toBytes(dsp.toDescription))
       table.put(p)
@@ -84,9 +84,9 @@ class HbaseTable(hbaseZK: String, parent: String,
    * and value is a description of the feature.
    * @return
    */
-  def getAllFeatureMeta: Map[String, FeatureDescription] = {
+  def getAllFeatureMeta(rowKey: Array[Byte]): Map[String, FeatureDescription] = {
     val result = new mutable.HashMap[String, FeatureDescription]()
-    val get = new Get(Bytes.toBytes(Constants.HBASE_FEATURE_META_ROWKEY)).addFamily(family)
+    val get = new Get(rowKey).addFamily(family)
     val r = table.get(get)
     if (r != null) {
       val metaMap = r.getNoVersionMap
@@ -104,9 +104,9 @@ class HbaseTable(hbaseZK: String, parent: String,
    * @param id vw namespace
    * @return
    */
-  def featureNameIsExist(id: String): Boolean = {
+  def featureNameIsExist(id: String, rowKey: Array[Byte]): Boolean = {
     var result = false
-    val get = new Get(Bytes.toBytes(Constants.HBASE_FEATURE_META_ROWKEY)).addFamily(family)
+    val get = new Get(rowKey).addFamily(family)
     val r = table.get(get)
     if (r != null) {
       result = r.containsColumn(family, Bytes.toBytes(id))

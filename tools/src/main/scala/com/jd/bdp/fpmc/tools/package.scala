@@ -1,6 +1,7 @@
 package com.jd.bdp.fpmc
 
 import com.jd.bdp.fpmc.entity.origin.FeatureDescription
+import com.jd.bdp.fpmc.tools.SparkSql2HbaseFeature.{OneFeatureMapping, CrossFeatureMapping}
 import spray.json._
 
 /**
@@ -9,7 +10,7 @@ import spray.json._
 package object tools {
 
   object MyJsonProtocol extends DefaultJsonProtocol {
-    implicit val colorFormat = jsonFormat4(FeatureDescription.apply)
+    implicit val featureDescriptionFormat = jsonFormat4(FeatureDescription.apply)
 
     /*implicit object FeatureDescriptionJsonFormat extends RootJsonFormat[FeatureDescription] {
       def write(c: FeatureDescription) =
@@ -21,6 +22,9 @@ package object tools {
         case _ => deserializationError("FeatureDescription expected")
       }
     }*/
+
+    implicit val crossFeatureMappingFormat = jsonFormat4(CrossFeatureMapping.apply)
+    implicit val oneFeatureMappingFormat = jsonFormat2(OneFeatureMapping.apply)
 
   }
 

@@ -16,15 +16,19 @@ import scala.collection.mutable
  */
 
 case class HbaseReaderParams(sql: String, row2Action: Row => Action,
-                             hbaseStorage: HbaseStorage) extends Serializable
+                             hbaseStorages: Array[HbaseStorage]) extends Serializable
 
 class HbaseReader(hrp: HbaseReaderParams) extends BaseReader[HiveContext, RDD[Example]] {
 
   @transient
   override def makeExamples(sqlContext: HiveContext): RDD[Example] = {
     sqlContext.sql(hrp.sql).map(hrp.row2Action).mapPartitions{ partitionOfRecords => {
-      val hbaseTable = hrp.hbaseStorage.create
-      val cache = new mutable.HashMap[Array[Byte], Features]()
+      val storages = hrp.hbaseStorages.map { hbaseStorage =>
+        val hbaseTable = hbaseStorage.create
+        val cache = new mutable.HashMap[Array[Byte], Features]()
+        (hbaseTable, cache)
+      }
+
       partitionOfRecords.map { a =>
         val fsids: Array[FeaturesID] = a.getFsIds
         val fArray = fsids.map { fsid =>

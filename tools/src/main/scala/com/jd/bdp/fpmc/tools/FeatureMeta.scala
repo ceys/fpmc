@@ -3,7 +3,6 @@ package com.jd.bdp.fpmc.tools
 import com.jd.bdp.fpmc.FeatureNameAlreadyUsedException
 import com.jd.bdp.fpmc.entity.origin.FeatureDescription
 import com.jd.bdp.fpmc.storage.HbaseTable
-import com.jd.bdp.fpmc.util.Constants
 import org.apache.hadoop.hbase.util.Bytes
 import scopt.OptionParser
 import spray.json._
@@ -43,7 +42,7 @@ object FeatureMeta extends Logging {
       val metaTable = new HbaseTable(Constants.HBASE_ZOOKEEPER_QUORUM,
       Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_META_DATA_TABLE,
       Bytes.toBytes(Constants.HBASE_TABLE_DEFAULT_FAMILY))
-      val featureMap = metaTable.getAllFeatureMeta
+      val featureMap = metaTable.getAllFeatureMeta(Bytes.toBytes(Constants.HBASE_FEATURE_META_ROWKEY))
       featureMap.foreach {case(name: String, dsp: FeatureDescription) =>
         println(dsp.toJson.prettyPrint)
       }
@@ -55,7 +54,7 @@ object FeatureMeta extends Logging {
       Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_META_DATA_TABLE,
       Bytes.toBytes(Constants.HBASE_TABLE_DEFAULT_FAMILY))
       try {
-        metaTable.pushFeatureMeta(featureDescription)
+        metaTable.pushFeatureMeta(featureDescription, Bytes.toBytes(Constants.HBASE_FEATURE_META_ROWKEY))
       } catch {
         case fnaue: FeatureNameAlreadyUsedException =>
           println(fnaue.getMessage)

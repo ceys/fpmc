@@ -39,6 +39,20 @@
             <name>Scala-tools Maven2 Repository</name>
             <url>http://scala-tools.org/repo-releases</url>
         </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>libs-releases</name>
+            <url>http://artifactory.360buy-develop.com/libs-releases</url>
+        </repository>
+        <repository>
+            <snapshots />
+            <id>snapshots</id>
+            <name>libs-snapshots</name>
+            <url>http://artifactory.360buy-develop.com/libs-snapshots</url>
+        </repository>
     </repositories>
 
 </project>
