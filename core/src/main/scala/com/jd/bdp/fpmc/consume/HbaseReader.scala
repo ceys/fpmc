@@ -1,6 +1,6 @@
 package com.jd.bdp.fpmc.consume
 
-import com.jd.bdp.fpmc.entity.origin.Action
+import com.jd.bdp.fpmc.entity.origin.Label
 import com.jd.bdp.fpmc.entity.result.{FeaturesID, Features}
 import com.jd.bdp.fpmc.storage.HbaseStorage
 import main.scala.com.jd.bdp.fpmc.consume.BaseReader
@@ -15,37 +15,40 @@ import scala.collection.mutable
  * Created by zhengchen on 2015/8/31.
  */
 
-case class HbaseReaderParams(sql: String, row2Action: Row => Action,
-                             hbaseStorages: Array[HbaseStorage]) extends Serializable
+case class HbaseReaderParams(sql: String, row2Label: Row => Label,
+                             hbaseStorages: Map[String, HbaseStorage],
+                              fSet: Set[String]) extends Serializable
 
 class HbaseReader(hrp: HbaseReaderParams) extends BaseReader[HiveContext, RDD[Example]] {
 
   @transient
-  override def makeExamples(sqlContext: HiveContext): RDD[Example] = {
-    sqlContext.sql(hrp.sql).map(hrp.row2Action).mapPartitions{ partitionOfRecords => {
-      val storages = hrp.hbaseStorages.map { hbaseStorage =>
-        val hbaseTable = hbaseStorage.create
-        val cache = new mutable.HashMap[Array[Byte], Features]()
-        (hbaseTable, cache)
-      }
+  override def makeExamples(sqlContext: HiveContext): RDD[Example] = sqlContext.sql(hrp.sql).map(hrp.row2Label).mapPartitions{ partitionOfRecords => {
+    val storages = hrp.hbaseStorages.map { case (key: String, hbaseStorage: HbaseStorage) =>
+      val hbaseTable = hbaseStorage.create
+      val cache = new mutable.HashMap[Array[Byte], Features]()
+      (key, (hbaseTable, cache))
+    }
 
-      partitionOfRecords.map { a =>
-        val fsids: Array[FeaturesID] = a.getFsIds
-        val fArray = fsids.map { fsid =>
+    partitionOfRecords.map { a =>
+      val fArray = a.ids.flatMap { case (key: String, idArray: Array[FeaturesID]) =>
+        idArray.map { id =>
           var features: Features = null
-          if (cache.contains(fsid.toHbaseKey)){
-            cache.get(fsid.toHbaseKey).get
+          val cache = storages.get(key).get._2
+          if (cache.contains(id.toHbaseKey)) {
+            cache.get(id.toHbaseKey).get
           } else {
-            features = hbaseTable.pullFeatures(fsid)
-            cache.put(fsid.toHbaseKey, features)
+            if (hrp.fSet.isEmpty) {
+              features = storages.get(key).get._1.pullFeatures(id)
+            } else {
+              features = storages.get(key).get._1.pullFeatures(id, hrp.fSet)
+            }
           }
           features
         }
-        Example(a.getLabel, fArray)
-      }
-    }
+      }.toArray
+      Example(a.label, fArray)
     }
   }
-
+  }
 
 }

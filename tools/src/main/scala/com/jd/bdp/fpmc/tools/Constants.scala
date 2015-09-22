@@ -23,14 +23,15 @@ object Constants {
   val HBASE_FEATURE_OFFLINE_FAMILY = "d"
   val HBASE_TABLE_DEFAULT_FAMILY = "d"
 
-  // hbase table
-  val HBASE_ITEM_FEATURE_TABLE = "o2o_item_feature"
+
 
   // Hbase Meta data table
   val HBASE_META_DATA_TABLE = "fpmc_meta_data"
 
   // ================= hbase table ===============
   val HBASE_USER_ITEM_CROSS_TABLE = "o2o_user_item_feature"
+  val HBASE_ITEM_FEATURE_TABLE = "o2o_item_feature"
+  val HBASE_USER_FEATURE_TABLE = "o2o_user_feature"
 
   // ================= hbase table family ===============
   val HBASE_OFFLINE_FEATURE_FAMILY = "d"

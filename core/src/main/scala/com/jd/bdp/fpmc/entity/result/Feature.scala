@@ -82,7 +82,7 @@ class ItemFeaturesId(sku: Long, time: Int, isOffline: Boolean) extends FeaturesI
 class UserFeaturesId(user: String, time: Int, isOffline: Boolean) extends FeaturesID {
 
   override def toHbaseKey: Array[Byte] = {
-    val key = ByteBuffer.allocate(4 + 8)
+    val key = ByteBuffer.allocate(4 + user.size)
     if (isOffline) {
       key.putInt(time - new DateTime(time.toLong * 1000).getSecondOfDay)
     } else {

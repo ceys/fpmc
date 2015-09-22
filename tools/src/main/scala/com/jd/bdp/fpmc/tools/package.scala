@@ -1,6 +1,7 @@
 package com.jd.bdp.fpmc
 
 import com.jd.bdp.fpmc.entity.origin.FeatureDescription
+import com.jd.bdp.fpmc.tools.MakeExamples.LabelMapping
 import com.jd.bdp.fpmc.tools.SparkSql2HbaseFeature.{OneFeatureMapping, CrossFeatureMapping}
 import spray.json._
 
@@ -25,6 +26,7 @@ package object tools {
 
     implicit val crossFeatureMappingFormat = jsonFormat4(CrossFeatureMapping.apply)
     implicit val oneFeatureMappingFormat = jsonFormat2(OneFeatureMapping.apply)
+    implicit val labelMappingFormat = jsonFormat5(LabelMapping.apply)
 
   }
 

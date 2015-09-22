@@ -48,6 +48,24 @@ class HbaseTable(hbaseZK: String, parent: String,
   }
 
 
+  def pullFeatures(fsid: FeaturesID, fSet: Set[String]): Features = {
+    val get: Get = new Get(fsid.toHbaseKey).addFamily(family)
+    for (f <- fSet) {
+      get.addColumn(family, Bytes.toBytes(f))
+    }
+    val r = table.get(get)
+    val result = new Features(fsid)
+    if (r != null) {
+      val featureMap = r.getNoVersionMap
+      if (featureMap != null) {
+        for ((k,v) <- featureMap.get(family)) {
+          result.addFeature(new Feature(Bytes.toString(k), Bytes.toString(v)))
+        }
+      }
+    }
+    result
+  }
+
   def pullFeatures(fsid: FeaturesID): Features = {
     val get: Get = new Get(fsid.toHbaseKey).addFamily(family)
     val r = table.get(get)

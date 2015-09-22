@@ -33,4 +33,9 @@ class SparkSql2Hbase(val ss2hp: SparkSql2HbaseParams) extends BaseWorkFlow[SQLCo
     }.count()
   }
 
+  @transient
+  def feature2storage4hbase(fd: RDD[Features]): Unit = {
+    ss2hp.st
+  }
+
 }

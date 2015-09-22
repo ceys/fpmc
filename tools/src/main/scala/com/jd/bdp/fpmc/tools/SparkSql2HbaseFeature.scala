@@ -29,7 +29,7 @@ object SparkSql2HbaseFeature extends Logging {
     opt[String]("date") action {(g, c) =>
       c.copy(date = g)
     } text "date of features"
-    opt[String]("sqlfile") action {(g, c) =>
+    opt[String]("sql") action {(g, c) =>
       c.copy(sql = g)
     } text "sql that extract row data"
     opt[String]("mapping") action {(g, c) =>
@@ -60,7 +60,7 @@ object SparkSql2HbaseFeature extends Logging {
         val mapping = fmc.mapping.parseJson.convertTo[CrossFeatureMapping]
         row => {
           val id = new CrossFeaturesId(row.getString(mapping.user),
-            row.getInt(mapping.attrCate),
+            mapping.attrCate,
             row.getLong(mapping.attrid),
             timeStamp,
             true)
