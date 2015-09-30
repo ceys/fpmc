@@ -91,8 +91,8 @@ class UserFeaturesId(user: String, time: Int, isOffline: Boolean) extends Featur
     key.put(Bytes.toBytes(user))
     key.array()
   }
-}
 
+}
 
 class CrossFeaturesId(uid: String, attrCate: Int, attrId: Long, time: Int, isOffline: Boolean) extends FeaturesID {
 

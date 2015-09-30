@@ -13,7 +13,7 @@ case class SparkSql2HbaseParams(sparkSql: String,
                                 row2features: Row => Features,
                                 st: HbaseStorage) extends Serializable
 
-
+//TODO: write hfile to hbase http://wuchong.me/blog/2015/04/06/spark-on-hbase-new-api/
 class SparkSql2Hbase(val ss2hp: SparkSql2HbaseParams) extends BaseWorkFlow[SQLContext, RDD[Features], HbaseStorage] {
 
   @transient

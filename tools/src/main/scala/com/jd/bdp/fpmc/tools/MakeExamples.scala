@@ -58,10 +58,10 @@ object MakeExamples  extends Logging {
       Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE,
         Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY)),
       Constants.FTYPE_ITEM -> new HbaseStorage(Constants.HBASE_ZOOKEEPER_QUORUM,
-        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_FEATURE_TABLE,
+        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_ITEM_FEATURE_TABLE,
         Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY)),
       Constants.FTYPE_USER -> new HbaseStorage(Constants.HBASE_ZOOKEEPER_QUORUM,
-        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_ITEM_FEATURE_TABLE,
+        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_FEATURE_TABLE,
         Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY)))
 
     def row2Label(row: Row): Label = {
@@ -81,7 +81,7 @@ object MakeExamples  extends Logging {
     }
 
     var fSet = Set[String]()
-    if (fmc.features != null) {
+    if (fmc.features != "") {
       fSet = fmc.features.parseJson.convertTo[Set[String]]
     }
     val readerParams = new HbaseReaderParams(fmc.sql, row2Label, strgMap, fSet)

@@ -1,15 +1,16 @@
 FPMC
 ====
 
-###Produce
+#Produce
 hive -> DataFrame -> RDD[Features] -> **Hbase**
 
+生产加工特征存入hbaew：
 参数说明：
-date：特征的日期，格式为2015-09-22
-sql: 提取数据的sql
-ftype： 特征类型（cross,user,item）
-mapping：sql row到feature的映射，
-  其中attrCate为交叉特征类型ID，需要是整数，
+--date：特征的日期，格式为2015-09-22
+--sql: 提取数据的sql
+--ftype： 特征类型（cross,user,item）
+--mapping：sql row到feature的映射，其中：
+  >attrCate为交叉特征类型ID，需要是整数，
   user的值对应的sql中user_id的索引，
   attrid对应sql中id的索引，
   fIndex为一个字典，键是vw命名空间名，值是对应sql中的索引。
@@ -31,14 +32,15 @@ spark-submit \
    --mapping '{"attrCate":1,"user":0,"attrid":1,"fIndex":{"ub3b":2,"ub7b":3}}' \
 ```
 
-###Consume
+#Consume
 hiveTable -> DataFrame -> RDD[Action] -> **RDD[Example]** <- Hbase
 
+生成从hbase取特征
 参数说明：
-sql：提取标签数据的sql
-output：样本输出的hdfs路径
-mapping：sql row到标签的映射，其中
-  user对应sql行数据中用户id的索引，
+--sql：提取标签数据的sql
+--output：样本输出的hdfs路径
+--mapping：sql row到标签的映射，其中:
+  >user对应sql行数据中用户id的索引，
   item对应sql行数据中skuid的索引（要求bigint类型），
   timestamp：时间戳对应的sql行数据索引，单位为s，类型为int，
   label：标签对应的sql行数据索引，
@@ -60,10 +62,3 @@ spark-submit \
    --mapping '{"user":0,"item":1,"timestamp":2,"label":3,"attrmap":{"1":1}}' \
    --output /tmp/fpmc/example
 ```
-
-###Entity
-Features
-
-Action
-
-Example

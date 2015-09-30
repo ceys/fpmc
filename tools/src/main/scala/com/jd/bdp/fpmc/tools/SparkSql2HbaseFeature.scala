@@ -86,9 +86,17 @@ object SparkSql2HbaseFeature extends Logging {
         }
     }
 
-    val hbaseStorage = new HbaseStorage( Constants.HBASE_ZOOKEEPER_QUORUM,
-      Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE
-      , Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
+    val hbaseStorage: HbaseStorage = fmc.ftype match {
+      case Constants.FTYPE_CROSS => new HbaseStorage( Constants.HBASE_ZOOKEEPER_QUORUM,
+        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_ITEM_CROSS_TABLE
+        , Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
+      case Constants.FTYPE_USER => new HbaseStorage( Constants.HBASE_ZOOKEEPER_QUORUM,
+        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_USER_FEATURE_TABLE
+        , Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
+      case Constants.FTYPE_ITEM => new HbaseStorage( Constants.HBASE_ZOOKEEPER_QUORUM,
+        Constants.HBASE_ZOOKEEPER_ZNODE_PARENT, Constants.HBASE_ITEM_FEATURE_TABLE
+        , Bytes.toBytes(Constants.HBASE_OFFLINE_FEATURE_FAMILY))
+    }
 
     val params = SparkSql2HbaseParams(fmc.sql, mappingFunc, hbaseStorage)
 

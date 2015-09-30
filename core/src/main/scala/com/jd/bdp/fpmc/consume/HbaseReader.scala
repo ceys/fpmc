@@ -29,7 +29,7 @@ class HbaseReader(hrp: HbaseReaderParams) extends BaseReader[HiveContext, RDD[Ex
       (key, (hbaseTable, cache))
     }
 
-    partitionOfRecords.map { a =>
+    partitionOfRecords.map { a: Label =>
       val fArray = a.ids.flatMap { case (key: String, idArray: Array[FeaturesID]) =>
         idArray.map { id =>
           var features: Features = null
